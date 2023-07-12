@@ -10,28 +10,63 @@ bindir      = @bindir@
 libdir      = @libdir@
 includedir  = @includedir@
 
-CC             = @CC@
-CFLAGS         = @CFLAGS@
+CC             = gcc
+CXX			   = gcc
+CFLAGS         = @CFLAGS@  -w -mfma -mavx2 -mavx512f -mavx512dq -mavx512bw  -mavx512dq -mavx512vl
 PTHREAD_CFLAGS = @PTHREAD_CFLAGS@
 PIC_CFLAGS     = @PIC_CFLAGS@
 SSE_CFLAGS     = @SSE_CFLAGS@
 CPPFLAGS       = @CPPFLAGS@
 LDFLAGS        = @LDFLAGS@
 DEFS           = @DEFS@
-LIBS           = -lhmmer -leasel @LIBS@ -lm
+LIBS           = -lhmmer -leasel @LIBS@ -lm -lbb
 
 AR          = @AR@ 
 RANLIB      = @RANLIB@
 
 ESLDIR         = @HMMER_ESLDIR@
-MYLIBDIRS      = -L../../${ESLDIR} -L.. 
+MYLIBDIRS      = -L../../${ESLDIR} -L.. \
+				 -L/home/xialei/intel/oneapi/vpl/2022.1.0/lib \
+				 -L/home/xialei/intel/oneapi/mpi/2021.6.0/libfabric/lib \
+				 -L/home/xialei/intel/oneapi/mpi/2021.6.0/lib \
+				 -L/home/xialei/intel/oneapi/dnnl/2022.1.0/cpu_dpcpp_gpu_dpcpp/lib \
+				 -L/home/xialei/intel/oneapi/compiler/2022.1.0/linux/lib \
+				 -L/usr/lib/gcc/x86_64-linux-gnu/9 \
+				 -L/usr/lib/x86_64-linux-gnu \
+				 -L/usr/lib \
+				 -L/lib/x86_64-linux-gnu \
+				 -L/lib \
+				 -L/home/xialei/intel/oneapi/tbb/2021.6.0/lib/intel64/gcc4.8 \
+				 -L/home/xialei/intel/oneapi/mpi/2021.6.0/lib/release \
+				 -L/home/xialei/intel/oneapi/mkl/2022.1.0/lib/intel64 \
+				 -L/home/xialei/intel/oneapi/ipp/2021.6.0/lib/intel64 \
+				 -L/home/xialei/intel/oneapi/ippcp/2021.6.0/lib/intel64 \
+				 -L/home/xialei/intel/oneapi/dal/2021.6.0/lib/intel64 \
+				 -L/home/xialei/intel/oneapi/compiler/2022.1.0/linux/compiler/lib/intel64_lin \
+				 -L/home/xialei/intel/oneapi/ccl/2021.6.0/lib/cpu_gpu_dpcpp
 MYINCDIRS      = -I../../${ESLDIR} \
 		 -I${top_srcdir}/easel \
 		 -I. \
 		 -I.. \
 		 -I${srcdir} \
 		 -I${top_srcdir}/src \
-		 -I${srcdir}/.. 
+		 -I${srcdir}/.. \
+		 -I/home/xialei/intel/oneapi/vpl/2022.1.0/include \
+		 -I/home/xialei/intel/oneapi/tbb/2021.6.0/include \
+		 -I/home/xialei/intel/oneapi/mpi/2021.6.0/include \
+		 -I/home/xialei/intel/oneapi/mkl/2022.1.0/include \
+		 -I/home/xialei/intel/oneapi/ipp/2021.6.0/include \
+		 -I/home/xialei/intel/oneapi/ippcp/2021.6.0/include \
+		 -I/home/xialei/intel/oneapi/dpl/2021.7.0/linux/include \
+		 -I/home/xialei/intel/oneapi/dpcpp-ct/2022.1.0/include \
+		 -I/home/xialei/intel/oneapi/dnnl/2022.1.0/cpu_dpcpp_gpu_dpcpp/include \
+		 -I/home/xialei/intel/oneapi/dev-utilities/2021.6.0/include \
+		 -I/home/xialei/intel/oneapi/dal/2021.6.0/include \
+		 -I/home/xialei/intel/oneapi/ccl/2021.6.0/include/cpu_gpu_dpcpp \
+		 -I/usr/lib/gcc/x86_64-linux-gnu/9/include \
+		 -I/usr/local/include \
+		 -I/usr/include/x86_64-linux-gnu \
+		 -I/usr/include
 
 OBJS =  decoding.o\
 	fwdback.o\
@@ -45,6 +80,9 @@ OBJS =  decoding.o\
 	p7_omx.o\
 	p7_oprofile.o\
 	mpi.o
+
+CPPSOURCES= calc_band.c fwdback_avx512.c
+CPPOBJS = $(CPPSOURCES:.c=.o) 
 
 HDRS =  impl_sse.h
 
@@ -81,6 +119,7 @@ QUIET_SUBDIR0 = +${MAKE} -C #space separator after -c
 QUIET_SUBDIR1 = 
 ifndef V
 	QUIET_CC      = @echo '    ' CC $@;
+	QUIET_CXX     = @echo '    ' CXX $@;
 	QUIET_GEN     = @echo '    ' GEN $@;
 	QUIET_AR      = @echo '    ' AR $@;
 	QUIET_SUBDIR0 = +@subdir=
@@ -96,7 +135,7 @@ dev:   ${UTESTS} ${BENCHMARKS} ${EXAMPLES}
 check: ${UTESTS}
 tests: ${UTESTS}
 
-libhmmer-impl.stamp: ${OBJS}
+libhmmer-impl.stamp: ${CPPOBJS} ${OBJS} 
 	${QUIET_AR}${AR} -r ../libhmmer.a $? > /dev/null 2>&1
 	@${RANLIB} ../libhmmer.a
 	@echo "impl_lib objects compiled:\c" > $@
@@ -105,9 +144,12 @@ libhmmer-impl.stamp: ${OBJS}
 .FORCE:
 
 ${OBJS}:   ${HDRS} ../hmmer.h 
+${CPPOBJS}:   ${HDRS} ../hmmer.h 
 
 .c.o:  
-	${QUIET_CC}${CC} ${CFLAGS} ${PIC_CFLAGS} ${PTHREAD_CFLAGS} ${SSE_CFLAGS} ${CPPFLAGS} ${DEFS} ${MYINCDIRS} -o $@ -c $<
+	${QUIET_CC}${CXX} ${CFLAGS} ${PIC_CFLAGS} ${PTHREAD_CFLAGS} ${SSE_CFLAGS} ${CPPFLAGS} ${DEFS} ${MYINCDIRS}  -std=c17 -o $@ -c $<
+.cpp.o:  
+	${QUIET_CXX}${CXX} ${CFLAGS} ${PIC_CFLAGS} ${PTHREAD_CFLAGS} ${SSE_CFLAGS} ${CPPFLAGS} -D_GLIBCXX_USE_CXX17_ABI=0 -std=c++17 -march=native ${DEFS} ${MYINCDIRS} -o $@ -c $<
 
 ${UTESTS}: libhmmer-impl.stamp ../libhmmer.a ${HDRS} ../hmmer.h
 	@BASENAME=`echo $@ | sed -e 's/_utest//'| sed -e 's/^p7_//'` ;\

@@ -403,33 +403,29 @@
  *
  */
 
-#include "p7_config.h"
+//#include "p7_config.h"
 
-#include <math.h>
+//#include <math.h>
 
-#include <xmmintrin.h>		/* SSE  */
-#include <emmintrin.h>		/* SSE2 */
+//#include <xmmintrin.h>		/* SSE  */
+//#include <emmintrin.h>		/* SSE2 */
 
-#include "easel.h"
-#include "esl_sse.h"
+//#include "easel.h"
+//#include "esl_sse.h"
 
-#include "hmmer.h"
-#include "impl_sse.h"
-
-#include "calc_band.h"
-#include <assert.h>
-#include <string.h>
+//#include "hmmer.h"
+//#include "impl_sse.h"
 
 /* Note that some ifdefs below has to be changed if these values are
    changed. These values are chosen based on some simple speed
    tests. Apparently, two registers are generally used for something
    else, leaving 14 registers on 64 bit versions and 6 registers on 32
    bit versions. */
-#ifdef __x86_64__ /* 64 bit version */
+//#ifdef __x86_64__ /* 64 bit version */
 #define  MAX_BANDS 14
-#else
-#define  MAX_BANDS 6
-#endif
+//#else
+//#define  MAX_BANDS 6
+//#endif
 
 
 #define STEP_SINGLE(sv)                         \
@@ -712,15 +708,9 @@ done1:                                          \
  i+=i2;                                         \
  convert(step, LENGTH_CHECK, done2)             \
 done2:                                          \
- return xEv;                                    
-  
-  /*
-  {uint16_t val[8];                              \
-  memcpy(val, &xEv, sizeof(val));               \
-  printf("Numerica2: %i %i %i %i %i %i %i %i \n", val[0], val[1], val[2], val[3], val[4], val[5], val[6], val[7]);\
-  exit(0); 
-  } \
-  */
+                                                \
+ return xEv;
+
 
 __m128i
 calc_band_1(const ESL_DSQ *dsq, int L, const P7_OPROFILE *om, int q, __m128i beginv, register __m128i xEv)
@@ -792,10 +782,7 @@ calc_band_11(const ESL_DSQ *dsq, int L, const P7_OPROFILE *om, int q, __m128i be
 __m128i
 calc_band_12(const ESL_DSQ *dsq, int L, const P7_OPROFILE *om, int q, __m128i beginv, register __m128i xEv)
 {
-  
-  return calc_band_avx512(dsq, L, om,q, beginv, xEv, 12);
-  //CALC(RESET_12, STEP_BANDS_12, CONVERT_12, 12)
-  
+  CALC(RESET_12, STEP_BANDS_12, CONVERT_12, 12)
 }
 
 __m128i

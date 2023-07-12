@@ -2,8 +2,8 @@ top_srcdir = @top_srcdir@
 srcdir     = @srcdir@
 VPATH      = @srcdir@ 
 
-CC             = @CC@
-CFLAGS         = @CFLAGS@ 
+CC             = gcc
+CFLAGS         = @CFLAGS@  -w
 SSE_CFLAGS     = @SSE_CFLAGS@ 
 VMX_CFLAGS     = @VMX_CFLAGS@ 
 PTHREAD_CFLAGS = @PTHREAD_CFLAGS@ 

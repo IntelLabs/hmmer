@@ -15,17 +15,17 @@
 int
 fm_getbits_m128 (__m128i in, char *buf, int reverse) 
 {
-  byte_m128 new;
-  new.m128 = in;
+  byte_m128 new_;
+  new_.m128 = in;
   int i,j;
 
   for (i=0; i<16;i++) {
 
     for (j=0; j<8; j++) {
       if (reverse)
-        buf[9*i+j] = (new.bytes[i]>>j)&0x1 ? '1' : '0';
+        buf[9*i+j] = (new_.bytes[i]>>j)&0x1 ? '1' : '0';
       else
-        buf[9*i+(7-j)] = (new.bytes[i]>>j)&0x1 ? '1' : '0';
+        buf[9*i+(7-j)] = (new_.bytes[i]>>j)&0x1 ? '1' : '0';
     }
     buf[9*i + 8] = ' ';
   }

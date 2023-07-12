@@ -36,6 +36,7 @@
 
 #include <xmmintrin.h>		/* SSE  */
 #include <emmintrin.h>		/* SSE2 */
+#include "fwdback_avx512.h"
 
 #include "easel.h"
 #include "esl_sse.h"
@@ -43,7 +44,10 @@
 #include "hmmer.h"
 #include "impl_sse.h"
 
-static int forward_engine (int do_full, const ESL_DSQ *dsq, int L, const P7_OPROFILE *om,                    P7_OMX *fwd, float *opt_sc);
+#include <time.h>
+
+
+static int forward_engine (int do_full, const ESL_DSQ *dsq, int L, const P7_OPROFILE *om, P7_OMX *fwd, float *opt_sc);
 static int backward_engine(int do_full, const ESL_DSQ *dsq, int L, const P7_OPROFILE *om, const P7_OMX *fwd, P7_OMX *bck, float *opt_sc);
 
 
@@ -95,7 +99,35 @@ p7_Forward(const ESL_DSQ *dsq, int L, const P7_OPROFILE *om, P7_OMX *ox, float *
   if (L     >= ox->allocXR)      ESL_EXCEPTION(eslEINVAL, "DP matrix allocated too small (too few X rows)");
   if (! p7_oprofile_IsLocal(om)) ESL_EXCEPTION(eslEINVAL, "Forward implementation makes assumptions that only work for local alignment");
 #endif
+  return forward_engine_avx512(TRUE, dsq, L, om, ox, opt_sc);
+#define BILLION  1000000000.0
+  struct timespec start, end;
+  int v1, v2;
+  for (int i =0; i<100; i++)
+    forward_engine_avx512(TRUE, dsq, L, om, ox, opt_sc);
+  //clock_gettime(CLOCK_REALTIME, &start);
+  for (int i =0; i<100; i++)
+    v1 = forward_engine_avx512(TRUE, dsq, L, om, ox, opt_sc);
+  //clock_gettime(CLOCK_REALTIME, &end);
+  //double time_spent = (end.tv_sec - start.tv_sec) +
+  //                      (end.tv_nsec - start.tv_nsec) / BILLION;
+  //printf("avx512: %f\n", time_spent); 
+  for (int i =0; i<100; i++)
+    forward_engine(TRUE, dsq, L, om, ox, opt_sc);
+  //clock_gettime(CLOCK_REALTIME, &start);
+  for (int i =0; i<100; i++)
+    v2 = forward_engine(TRUE, dsq, L, om, ox, opt_sc);
+  //clock_gettime(CLOCK_REALTIME, &end);
+  //time_spent = (end.tv_sec - start.tv_sec) +
+  //                      (end.tv_nsec - start.tv_nsec) / BILLION;
+  //printf("old: %f\n", time_spent); 
+  
+  if (v1!=v2){
+    printf("error\n");
+    exit(0);
+  }
 
+  exit(0);
   return forward_engine(TRUE, dsq, L, om, ox, opt_sc);
 }
 
@@ -137,7 +169,7 @@ p7_ForwardParser(const ESL_DSQ *dsq, int L, const P7_OPROFILE *om, P7_OMX *ox, f
   if (L     >= ox->allocXR)      ESL_EXCEPTION(eslEINVAL, "DP matrix allocated too small (too few X rows)");
   if (! p7_oprofile_IsLocal(om)) ESL_EXCEPTION(eslEINVAL, "Forward implementation makes assumptions that only work for local alignment");
 #endif
-
+  //forward_engine_avx512(TRUE, dsq, L, om, ox, opt_sc);
   return forward_engine(FALSE, dsq, L, om, ox, opt_sc);
 }
 

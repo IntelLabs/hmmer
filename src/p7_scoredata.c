@@ -218,70 +218,70 @@ ERROR:
  */
 P7_SCOREDATA *
 p7_hmm_ScoreDataClone(P7_SCOREDATA *src, int Kp) {
-  P7_SCOREDATA *new;
+  P7_SCOREDATA *new_;
   int status;
   int i;
 
   if (src == NULL)
     return NULL;
 
-  ESL_ALLOC(new, sizeof(P7_SCOREDATA));
-  new->M               = src->M;
-  new->type            = src->type;
-  new->ssv_scores      = NULL;
-  new->opt_ext_fwd     = NULL;
-  new->opt_ext_rev     = NULL;
-  new->prefix_lengths  = NULL;
-  new->suffix_lengths  = NULL;
-  new->fwd_scores      = NULL;
-  new->fwd_transitions = NULL;
+  ESL_ALLOC(new_, sizeof(P7_SCOREDATA));
+  new_->M               = src->M;
+  new_->type            = src->type;
+  new_->ssv_scores      = NULL;
+  new_->opt_ext_fwd     = NULL;
+  new_->opt_ext_rev     = NULL;
+  new_->prefix_lengths  = NULL;
+  new_->suffix_lengths  = NULL;
+  new_->fwd_scores      = NULL;
+  new_->fwd_transitions = NULL;
 
-  if (new->type == p7_sd_std) {
-    ESL_ALLOC(new->ssv_scores, (src->M + 1) * Kp * sizeof(uint8_t));
-    memcpy(new->ssv_scores, src->ssv_scores, (src->M + 1) * Kp * sizeof(uint8_t)  );
+  if (new_->type == p7_sd_std) {
+    ESL_ALLOC(new_->ssv_scores, (src->M + 1) * Kp * sizeof(uint8_t));
+    memcpy(new_->ssv_scores, src->ssv_scores, (src->M + 1) * Kp * sizeof(uint8_t)  );
   } else {
-    ESL_ALLOC(new->ssv_scores_f, (src->M + 1) * Kp * sizeof(float));
-    memcpy(new->ssv_scores_f, src->ssv_scores_f, (src->M + 1) * Kp * sizeof(float)  );
+    ESL_ALLOC(new_->ssv_scores_f, (src->M + 1) * Kp * sizeof(float));
+    memcpy(new_->ssv_scores_f, src->ssv_scores_f, (src->M + 1) * Kp * sizeof(float)  );
   }
 
 
   if (src->prefix_lengths != NULL) {
-     ESL_ALLOC(new->prefix_lengths, (src->M+1) * sizeof(float));
-     memcpy(new->prefix_lengths, src->prefix_lengths, (src->M+1) * sizeof(float));
+     ESL_ALLOC(new_->prefix_lengths, (src->M+1) * sizeof(float));
+     memcpy(new_->prefix_lengths, src->prefix_lengths, (src->M+1) * sizeof(float));
   }
   if (src->suffix_lengths != NULL) {
-     ESL_ALLOC(new->suffix_lengths, (src->M+1) * sizeof(float));
-     memcpy(new->suffix_lengths, src->suffix_lengths, (src->M+1) * sizeof(float));
+     ESL_ALLOC(new_->suffix_lengths, (src->M+1) * sizeof(float));
+     memcpy(new_->suffix_lengths, src->suffix_lengths, (src->M+1) * sizeof(float));
   }
   if (src->fwd_scores != NULL) {
-     ESL_ALLOC(new->fwd_scores, (src->M+1) * sizeof(float));
-     memcpy(new->fwd_scores, src->fwd_scores, (src->M+1) * sizeof(float));
+     ESL_ALLOC(new_->fwd_scores, (src->M+1) * sizeof(float));
+     memcpy(new_->fwd_scores, src->fwd_scores, (src->M+1) * sizeof(float));
   }
 
 
   if (src->opt_ext_fwd != NULL) {
-     ESL_ALLOC(new->opt_ext_fwd, (src->M + 1) * sizeof(float*));
+     ESL_ALLOC(new_->opt_ext_fwd, (src->M + 1) * sizeof(float*));
      for (i=1; i<src->M; i++) {
-       ESL_ALLOC(new->opt_ext_fwd[i], 10 * sizeof(float));
-       memcpy(new->opt_ext_fwd[i], src->opt_ext_fwd[i], 10 * sizeof(float));
+       ESL_ALLOC(new_->opt_ext_fwd[i], 10 * sizeof(float));
+       memcpy(new_->opt_ext_fwd[i], src->opt_ext_fwd[i], 10 * sizeof(float));
      }
   }
   if (src->opt_ext_rev != NULL) {
-     ESL_ALLOC(new->opt_ext_rev, (src->M + 1) * sizeof(float*));
+     ESL_ALLOC(new_->opt_ext_rev, (src->M + 1) * sizeof(float*));
      for (i=1; i<src->M; i++) {
-       ESL_ALLOC(new->opt_ext_rev[i], 10 * sizeof(float));
-       memcpy(new->opt_ext_rev[i], src->opt_ext_rev[i], 10 * sizeof(float));
+       ESL_ALLOC(new_->opt_ext_rev[i], 10 * sizeof(float));
+       memcpy(new_->opt_ext_rev[i], src->opt_ext_rev[i], 10 * sizeof(float));
      }
   }
   if (src->fwd_transitions != NULL) {
-     ESL_ALLOC(new->fwd_transitions, p7O_NTRANS * sizeof(float*));
+     ESL_ALLOC(new_->fwd_transitions, p7O_NTRANS * sizeof(float*));
      for (i=0; i<p7O_NTRANS; i++) {
-       ESL_ALLOC(new->fwd_transitions[i], (src->M+1)* sizeof(float));
-       memcpy(new->fwd_transitions[i], src->fwd_transitions[i], (src->M+1) * sizeof(float));
+       ESL_ALLOC(new_->fwd_transitions[i], (src->M+1)* sizeof(float));
+       memcpy(new_->fwd_transitions[i], src->fwd_transitions[i], (src->M+1) * sizeof(float));
      }
   }
 
-  return new;
+  return new_;
 
 ERROR:
   return NULL;

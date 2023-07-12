@@ -259,43 +259,43 @@ P7_HMM *
 p7_hmm_Clone(const P7_HMM *hmm)
 {
   int     status;
-  P7_HMM *new = NULL;
+  P7_HMM *new_ = NULL;
   int     z;
 
-  if ((new = p7_hmm_Create(hmm->M, hmm->abc)) == NULL) goto ERROR;
-  p7_hmm_CopyParameters(hmm, new);
+  if ((new_ = p7_hmm_Create(hmm->M, hmm->abc)) == NULL) goto ERROR;
+  p7_hmm_CopyParameters(hmm, new_);
   
-  if ((status = esl_strdup(hmm->name,   -1, &(new->name)))   != eslOK) goto ERROR;
-  if ((status = esl_strdup(hmm->acc,    -1, &(new->acc)))    != eslOK) goto ERROR;
-  if ((status = esl_strdup(hmm->desc,   -1, &(new->desc)))   != eslOK) goto ERROR;
+  if ((status = esl_strdup(hmm->name,   -1, &(new_->name)))   != eslOK) goto ERROR;
+  if ((status = esl_strdup(hmm->acc,    -1, &(new_->acc)))    != eslOK) goto ERROR;
+  if ((status = esl_strdup(hmm->desc,   -1, &(new_->desc)))   != eslOK) goto ERROR;
 
-  if ((hmm->flags & p7H_RF)    && (status = esl_strdup(hmm->rf,        -1, &(new->rf)))        != eslOK) goto ERROR;
-  if ((hmm->flags & p7H_MMASK) && (status = esl_strdup(hmm->mm,        -1, &(new->mm)))        != eslOK) goto ERROR;
-  if ((hmm->flags & p7H_CONS)  && (status = esl_strdup(hmm->consensus, -1, &(new->consensus))) != eslOK) goto ERROR;
-  if ((hmm->flags & p7H_CS)    && (status = esl_strdup(hmm->cs,        -1, &(new->cs)))        != eslOK) goto ERROR;
-  if ((hmm->flags & p7H_CA)    && (status = esl_strdup(hmm->ca,        -1, &(new->ca)))        != eslOK) goto ERROR;
-  if ((hmm->comlog != NULL)    && (status = esl_strdup(hmm->comlog,    -1, &(new->comlog)))    != eslOK) goto ERROR;
-  if ((hmm->ctime  != NULL)    && (status = esl_strdup(hmm->ctime,     -1, &(new->ctime)))     != eslOK) goto ERROR;
+  if ((hmm->flags & p7H_RF)    && (status = esl_strdup(hmm->rf,        -1, &(new_->rf)))        != eslOK) goto ERROR;
+  if ((hmm->flags & p7H_MMASK) && (status = esl_strdup(hmm->mm,        -1, &(new_->mm)))        != eslOK) goto ERROR;
+  if ((hmm->flags & p7H_CONS)  && (status = esl_strdup(hmm->consensus, -1, &(new_->consensus))) != eslOK) goto ERROR;
+  if ((hmm->flags & p7H_CS)    && (status = esl_strdup(hmm->cs,        -1, &(new_->cs)))        != eslOK) goto ERROR;
+  if ((hmm->flags & p7H_CA)    && (status = esl_strdup(hmm->ca,        -1, &(new_->ca)))        != eslOK) goto ERROR;
+  if ((hmm->comlog != NULL)    && (status = esl_strdup(hmm->comlog,    -1, &(new_->comlog)))    != eslOK) goto ERROR;
+  if ((hmm->ctime  != NULL)    && (status = esl_strdup(hmm->ctime,     -1, &(new_->ctime)))     != eslOK) goto ERROR;
   if (hmm->flags & p7H_MAP) {
-    ESL_ALLOC(new->map, sizeof(int) * (hmm->M+1));
-    esl_vec_ICopy(hmm->map, hmm->M+1, new->map);
+    ESL_ALLOC(new_->map, sizeof(int) * (hmm->M+1));
+    esl_vec_ICopy(hmm->map, hmm->M+1, new_->map);
   }
-  new->nseq       = hmm->nseq;
-  new->eff_nseq   = hmm->eff_nseq;
-  new->max_length = hmm->max_length;
-  new->checksum   = hmm->checksum;
+  new_->nseq       = hmm->nseq;
+  new_->eff_nseq   = hmm->eff_nseq;
+  new_->max_length = hmm->max_length;
+  new_->checksum   = hmm->checksum;
 
-  for (z = 0; z < p7_NEVPARAM; z++) new->evparam[z] = hmm->evparam[z];
-  for (z = 0; z < p7_NCUTOFFS; z++) new->cutoff[z]  = hmm->cutoff[z];
-  for (z = 0; z < p7_MAXABET;  z++) new->compo[z]   = hmm->compo[z];
+  for (z = 0; z < p7_NEVPARAM; z++) new_->evparam[z] = hmm->evparam[z];
+  for (z = 0; z < p7_NCUTOFFS; z++) new_->cutoff[z]  = hmm->cutoff[z];
+  for (z = 0; z < p7_MAXABET;  z++) new_->compo[z]   = hmm->compo[z];
 
-  new->offset   = hmm->offset;
-  new->flags    = hmm->flags;
-  new->abc      = hmm->abc;
-  return new;
+  new_->offset   = hmm->offset;
+  new_->flags    = hmm->flags;
+  new_->abc      = hmm->abc;
+  return new_;
 
  ERROR:
-  if (new != NULL) p7_hmm_Destroy(new);
+  if (new_ != NULL) p7_hmm_Destroy(new_);
   return NULL;
 }
 

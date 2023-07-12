@@ -10,8 +10,8 @@ TARGET	       = libdivsufsort.a
 MAKEFILE       = Makefile
 
 # options
-CC             = @CC@
-CFLAGS         = @CFLAGS@ 
+CC             = gcc
+CFLAGS         = @CFLAGS@
 SSE_CFLAGS     = @SSE_CFLAGS@ 
 VMX_CFLAGS     = @VMX_CFLAGS@ 
 PTHREAD_CFLAGS = @PTHREAD_CFLAGS@ 

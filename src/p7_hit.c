@@ -612,7 +612,7 @@ extern int p7_hit_TestSample(ESL_RAND64 *rng, P7_HIT **ret_obj){
   }
 
   ESL_ALLOC(*ret_obj, sizeof(P7_HIT));
-
+  {
   P7_HIT *the_obj = *ret_obj;  // get a convenience pointer
 
 
@@ -682,7 +682,7 @@ extern int p7_hit_TestSample(ESL_RAND64 *rng, P7_HIT **ret_obj){
   }
   esl_randomness_Destroy(rng32);
   return eslOK;  // nothing went wrong
-
+  }
 ERROR:
   return eslEMEM;
 }

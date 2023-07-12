@@ -139,13 +139,13 @@ typedef struct p7_oprofile_s {
   int    clone;                 /* this optimized profile structure is just a copy   */
                                 /* of another profile structre.  all pointers of     */
                                 /* this structure should not be freed.               */
-} P7_OPROFILE;
+} P7_OPROFILE __attribute__((aligned(8)));
 
 typedef struct {
   int            count;       /* number of <P7_OPROFILE> objects in the block */
   int            listSize;    /* maximum number elements in the list          */
   P7_OPROFILE  **list;        /* array of <P7_OPROFILE> objects               */
-} P7_OM_BLOCK;
+} P7_OM_BLOCK __attribute__((aligned(8)));
 
 /* retrieve match odds ratio [k][x]
  * this gets used in p7_alidisplay.c, when we're deciding if a residue is conserved or not */
@@ -208,7 +208,7 @@ typedef struct p7_omx_s {
    */
   int     debugging;    /* TRUE if we're in debugging mode                             */
   FILE   *dfp;      /* output stream for diagnostics                               */
-} P7_OMX;
+} P7_OMX __attribute__((aligned(8)));
 
 /* ?MXo(q) access macros work for either uchar or float, so long as you
  * init your "dp" to point to the appropriate array.

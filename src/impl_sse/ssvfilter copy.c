@@ -416,10 +416,6 @@
 #include "hmmer.h"
 #include "impl_sse.h"
 
-#include "calc_band.h"
-#include <assert.h>
-#include <string.h>
-
 /* Note that some ifdefs below has to be changed if these values are
    changed. These values are chosen based on some simple speed
    tests. Apparently, two registers are generally used for something
@@ -712,15 +708,9 @@ done1:                                          \
  i+=i2;                                         \
  convert(step, LENGTH_CHECK, done2)             \
 done2:                                          \
- return xEv;                                    
-  
-  /*
-  {uint16_t val[8];                              \
-  memcpy(val, &xEv, sizeof(val));               \
-  printf("Numerica2: %i %i %i %i %i %i %i %i \n", val[0], val[1], val[2], val[3], val[4], val[5], val[6], val[7]);\
-  exit(0); 
-  } \
-  */
+                                                \
+ return xEv;
+
 
 __m128i
 calc_band_1(const ESL_DSQ *dsq, int L, const P7_OPROFILE *om, int q, __m128i beginv, register __m128i xEv)
@@ -792,10 +782,138 @@ calc_band_11(const ESL_DSQ *dsq, int L, const P7_OPROFILE *om, int q, __m128i be
 __m128i
 calc_band_12(const ESL_DSQ *dsq, int L, const P7_OPROFILE *om, int q, __m128i beginv, register __m128i xEv)
 {
-  
-  return calc_band_avx512(dsq, L, om,q, beginv, xEv, 12);
-  //CALC(RESET_12, STEP_BANDS_12, CONVERT_12, 12)
-  
+    //CALC(RESET_12, STEP_BANDS_12, CONVERT_12, 12)
+    //CALC(reset, step, convert, width)
+    int i;
+    int i2;                                       
+    int Q        = p7O_NQB(om->M);                
+    __m128i *rsc;                                 
+                                                  
+    int w = 12;                                
+                                                  
+    dsq++;                                        
+                                                  
+    register __m128i sv00 = beginv;
+    register __m128i sv01 = beginv;
+    register __m128i sv02 = beginv;
+    register __m128i sv03 = beginv;
+    register __m128i sv04 = beginv;
+    register __m128i sv05 = beginv;
+    register __m128i sv06 = beginv;
+    register __m128i sv07 = beginv;
+    register __m128i sv08 = beginv;
+    register __m128i sv09 = beginv;
+    register __m128i sv10 = beginv;
+    register __m128i sv11 = beginv;
+
+    for (i = 0; i < L && i < Q - q - w; i++)      
+      {                                           
+        rsc = om->sbv[dsq[i]] + i + q;
+        sv00   = _mm_subs_epi8(sv00, *rsc); rsc++;        
+        xEv  = _mm_max_epu8(xEv, sv00);
+        sv01   = _mm_subs_epi8(sv01, *rsc); rsc++;       
+        xEv  = _mm_max_epu8(xEv, sv01);
+        sv02   = _mm_subs_epi8(sv02, *rsc); rsc++;       
+        xEv  = _mm_max_epu8(xEv, sv02);
+        sv03   = _mm_subs_epi8(sv03, *rsc); rsc++;       
+        xEv  = _mm_max_epu8(xEv, sv03);
+        sv04   = _mm_subs_epi8(sv04, *rsc); rsc++;       
+        xEv  = _mm_max_epu8(xEv, sv04);
+        sv05   = _mm_subs_epi8(sv05, *rsc); rsc++;        
+        xEv  = _mm_max_epu8(xEv, sv05);
+        sv06   = _mm_subs_epi8(sv06, *rsc); rsc++;       
+        xEv  = _mm_max_epu8(xEv, sv06);
+        sv07   = _mm_subs_epi8(sv07, *rsc); rsc++;       
+        xEv  = _mm_max_epu8(xEv, sv07);
+        sv08   = _mm_subs_epi8(sv08, *rsc); rsc++;       
+        xEv  = _mm_max_epu8(xEv, sv08);
+        sv09   = _mm_subs_epi8(sv09, *rsc); rsc++;       
+        xEv  = _mm_max_epu8(xEv, sv09);
+        sv10 = _mm_subs_epi8(sv10, *rsc); rsc++;
+        xEv = _mm_max_epu8(xEv, sv10);
+        sv11   = _mm_subs_epi8(sv11, *rsc); rsc++;       
+        xEv  = _mm_max_epu8(xEv, sv11);
+    }
+
+    i = Q - q - w;                                
+    //CONVERT_12(STEP_BANDS_12, LENGTH_CHECK, done1)            
+    //CONVERT_12(step, LENGTH_CHECK, label)           
+    CONVERT_STEP(step, LENGTH_CHECK, label, sv11, Q - 12) 
+
+    CONVERT_STEP(step, length_check, label, sv, pos)        
+      length_check(label)                                           
+
+    rsc = om->sbv[dsq[i]] + pos;
+
+    sv00   = _mm_subs_epi8(sv00, *rsc); rsc++;        
+    xEv  = _mm_max_epu8(xEv, sv00);
+    sv01   = _mm_subs_epi8(sv01, *rsc); rsc++;       
+    xEv  = _mm_max_epu8(xEv, sv01);
+    sv02   = _mm_subs_epi8(sv02, *rsc); rsc++;       
+    xEv  = _mm_max_epu8(xEv, sv02);
+    sv03   = _mm_subs_epi8(sv03, *rsc); rsc++;       
+    xEv  = _mm_max_epu8(xEv, sv03);
+    sv04   = _mm_subs_epi8(sv04, *rsc); rsc++;       
+    xEv  = _mm_max_epu8(xEv, sv04);
+    sv05   = _mm_subs_epi8(sv05, *rsc); rsc++;        
+    xEv  = _mm_max_epu8(xEv, sv05);
+    sv06   = _mm_subs_epi8(sv06, *rsc); rsc++;       
+    xEv  = _mm_max_epu8(xEv, sv06);
+    sv07   = _mm_subs_epi8(sv07, *rsc); rsc++;       
+    xEv  = _mm_max_epu8(xEv, sv07);
+    sv08   = _mm_subs_epi8(sv08, *rsc); rsc++;       
+    xEv  = _mm_max_epu8(xEv, sv08);
+    sv09   = _mm_subs_epi8(sv09, *rsc); rsc++;       
+    xEv  = _mm_max_epu8(xEv, sv09);
+    sv10 = _mm_subs_epi8(sv10, *rsc); rsc++;
+    xEv = _mm_max_epu8(xEv, sv10);
+    sv11   = _mm_subs_epi8(sv11, *rsc); rsc++;       
+    xEv  = _mm_max_epu8(xEv, sv11);
+
+    sv11 = _mm_slli_si128(sv11, 1);
+    sv11 = _mm_or_si128(sv11, beginv);
+      i++;
+
+    rsc = om->sbv[dsq[i]] + i + q;
+      
+
+      CONVERT_STEP(step, LENGTH_CHECK, label, sv10, Q - 10)
+      CONVERT_STEP(step, LENGTH_CHECK, label, sv09, Q - 09)
+      CONVERT_STEP(step, LENGTH_CHECK, label, sv08, Q - 08)
+      CONVERT_STEP(step, LENGTH_CHECK, label, sv07, Q - 07)
+      CONVERT_STEP(step, LENGTH_CHECK, label, sv06, Q - 06)
+      CONVERT_STEP(step, LENGTH_CHECK, label, sv05, Q - 05)
+      CONVERT_STEP(step, LENGTH_CHECK, label, sv04, Q - 04)
+      CONVERT_STEP(step, LENGTH_CHECK, label, sv03, Q - 03)
+      CONVERT_STEP(step, LENGTH_CHECK, label, sv02, Q - 02) 
+      CONVERT_STEP(step, LENGTH_CHECK, label, sv01, Q - 01) 
+      done1:
+                                                  
+  for (i2 = Q - q; i2 < L - Q; i2 += Q)          
+    {                                            
+      for (i = 0; i < Q - w; i++)                
+        {                                        
+          rsc = om->sbv[dsq[i2 + i]] + i;        
+          STEP_BANDS_12                                 
+        }                                        
+                                                  
+      i += i2;                                   
+      CONVERT_12(STEP_BANDS_12, NO_CHECK, )                  
+    }                                            
+                                                  
+  for (i = 0; i2 + i < L && i < Q - w; i++)      
+    {                                            
+      rsc = om->sbv[dsq[i2 + i]] + i;            
+      STEP_BANDS_12                                   
+    }                                            
+                                                  
+  i+=i2;                                         
+  CONVERT_12(STEP_BANDS_12, LENGTH_CHECK, done2)             
+  done2:                                          
+                                                  
+  return xEv;
+
+      
 }
 
 __m128i

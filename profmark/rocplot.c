@@ -96,7 +96,7 @@ struct result_s {
   double E;			/* E-value */
   int    qidx;			/* index of query  */
   int    tidx; 			/* index of target seq: 0..npos-1 for positives; npos..npos+nneg-1 for negatives */
-  int    class_;			/* +1 = positive; -1 = negative; 0 = ignore   */
+  int    class;			/* +1 = positive; -1 = negative; 0 = ignore   */
 };
 
 
@@ -368,9 +368,9 @@ parse_results(char *resfile, int **pni, ESL_KEYHASH *qkh, ESL_KEYHASH *poskh, ES
       if (esl_fileparser_GetTokenOnLine(efp, &target, &tlen)   != eslOK) esl_fatal("failed to parse line %d of %s", efp->linenumber, resfile); /* target name; will be converted to an index */
       if (esl_fileparser_GetTokenOnLine(efp, &query,  &qlen)   != eslOK) esl_fatal("failed to parse line %d of %s", efp->linenumber, resfile); /* query name; will be converted to an index */
       if (esl_keyhash_Lookup(qkh, query, qlen, &(rp[nr].qidx)) != eslOK) esl_fatal("failed to find query model %s in hash", query);  /* query index */
-      rp[nr].class_ = classify_pair_by_names(query, target);
+      rp[nr].class = classify_pair_by_names(query, target);
 
-      if (rp[nr].class_ == -1)		/* negatives: look up in negkh, and offset the index by npos */
+      if (rp[nr].class == -1)		/* negatives: look up in negkh, and offset the index by npos */
 	{
 	  if (esl_keyhash_Lookup(negkh, target, tlen, &(rp[nr].tidx)) != eslOK) esl_fatal("failed to find target seq  %s in hash", target);	/* target index */
 	  rp[nr].tidx  += esl_keyhash_GetNumber(poskh);
@@ -458,12 +458,12 @@ make_plot(struct result_s *rp, int nresults, int **pni, double *queryp, int nq, 
       else
 	weight = 1.0;
 
-      if (rp[j].class_ == 1) 
+      if (rp[j].class == 1) 
 	{
 	  true_pos  += weight;
 	  plot->tp[curr_xi] = true_pos;
 	}
-      else if (rp[j].class_ == -1) 
+      else if (rp[j].class == -1) 
 	{
 	  false_pos += weight / (double) nq;   /* FP/query */
 	  

@@ -371,7 +371,6 @@ main(int argc, char **argv)
   int              status  = eslOK;
 
   /* Set processor specific flags */
-
   impl_Init();
 
   /* Initialize what we can in the config structure (without knowing the alphabet yet) 

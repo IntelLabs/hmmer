@@ -679,7 +679,7 @@ set_random_segment(ESL_GETOPTS *go, struct cfg_s *cfg, FILE *logfp, ESL_DSQ *dsq
 static void
 msa_select_topn(ESL_MSA **msaptr, int n)
 {
-  ESL_MSA *new_;
+  ESL_MSA *new;
   int     *useme;
   int      i;
 
@@ -689,11 +689,11 @@ msa_select_topn(ESL_MSA **msaptr, int n)
   for (i = 0; i < n;               i++) useme[i] = TRUE;
   for (     ; i < (*msaptr)->nseq; i++) useme[i] = FALSE;
 
-  if ( esl_msa_SequenceSubset(*msaptr, useme, &new_) != eslOK) esl_fatal("esl_msa_SequenceSubset() failed");
+  if ( esl_msa_SequenceSubset(*msaptr, useme, &new) != eslOK) esl_fatal("esl_msa_SequenceSubset() failed");
 
   free(useme);
   esl_msa_Destroy(*msaptr);
-  *msaptr = new_;
+  *msaptr = new;
   return;
 }
 
@@ -704,16 +704,16 @@ msa_select_topn(ESL_MSA **msaptr, int n)
 static void
 pstack_select_topn(ESL_STACK **stackptr, int n)
 {
-  ESL_STACK *new_;
+  ESL_STACK *new;
   int        i;
 
   if (n > (*stackptr)->n) return;
   
-  new_ = esl_stack_PCreate();
+  new = esl_stack_PCreate();
   for (i = n-1; i >= 0; i--)
-    esl_stack_PPush(new_, (*stackptr)->pdata[i]);
+    esl_stack_PPush(new, (*stackptr)->pdata[i]);
   esl_stack_Destroy(*stackptr);
-  *stackptr = new_;
+  *stackptr = new;
   return;
 }
   

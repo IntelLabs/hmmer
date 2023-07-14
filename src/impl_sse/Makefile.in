@@ -10,7 +10,7 @@ bindir      = @bindir@
 libdir      = @libdir@
 includedir  = @includedir@
 
-CC             = gcc
+CC             = @CC@
 CXX			   = gcc
 CFLAGS         = @CFLAGS@  -w -mfma -mavx2 -mavx512f -mavx512dq -mavx512bw  -mavx512dq -mavx512vl
 PTHREAD_CFLAGS = @PTHREAD_CFLAGS@
@@ -19,31 +19,19 @@ SSE_CFLAGS     = @SSE_CFLAGS@
 CPPFLAGS       = @CPPFLAGS@
 LDFLAGS        = @LDFLAGS@
 DEFS           = @DEFS@
-LIBS           = -lhmmer -leasel @LIBS@ -lm -lbb
+LIBS           = -lhmmer -leasel @LIBS@ -lm 
 
 AR          = @AR@ 
 RANLIB      = @RANLIB@
 
 ESLDIR         = @HMMER_ESLDIR@
 MYLIBDIRS      = -L../../${ESLDIR} -L.. \
-				 -L/home/xialei/intel/oneapi/vpl/2022.1.0/lib \
-				 -L/home/xialei/intel/oneapi/mpi/2021.6.0/libfabric/lib \
-				 -L/home/xialei/intel/oneapi/mpi/2021.6.0/lib \
-				 -L/home/xialei/intel/oneapi/dnnl/2022.1.0/cpu_dpcpp_gpu_dpcpp/lib \
-				 -L/home/xialei/intel/oneapi/compiler/2022.1.0/linux/lib \
 				 -L/usr/lib/gcc/x86_64-linux-gnu/9 \
 				 -L/usr/lib/x86_64-linux-gnu \
 				 -L/usr/lib \
 				 -L/lib/x86_64-linux-gnu \
 				 -L/lib \
-				 -L/home/xialei/intel/oneapi/tbb/2021.6.0/lib/intel64/gcc4.8 \
-				 -L/home/xialei/intel/oneapi/mpi/2021.6.0/lib/release \
-				 -L/home/xialei/intel/oneapi/mkl/2022.1.0/lib/intel64 \
-				 -L/home/xialei/intel/oneapi/ipp/2021.6.0/lib/intel64 \
-				 -L/home/xialei/intel/oneapi/ippcp/2021.6.0/lib/intel64 \
-				 -L/home/xialei/intel/oneapi/dal/2021.6.0/lib/intel64 \
-				 -L/home/xialei/intel/oneapi/compiler/2022.1.0/linux/compiler/lib/intel64_lin \
-				 -L/home/xialei/intel/oneapi/ccl/2021.6.0/lib/cpu_gpu_dpcpp
+
 MYINCDIRS      = -I../../${ESLDIR} \
 		 -I${top_srcdir}/easel \
 		 -I. \
@@ -51,18 +39,6 @@ MYINCDIRS      = -I../../${ESLDIR} \
 		 -I${srcdir} \
 		 -I${top_srcdir}/src \
 		 -I${srcdir}/.. \
-		 -I/home/xialei/intel/oneapi/vpl/2022.1.0/include \
-		 -I/home/xialei/intel/oneapi/tbb/2021.6.0/include \
-		 -I/home/xialei/intel/oneapi/mpi/2021.6.0/include \
-		 -I/home/xialei/intel/oneapi/mkl/2022.1.0/include \
-		 -I/home/xialei/intel/oneapi/ipp/2021.6.0/include \
-		 -I/home/xialei/intel/oneapi/ippcp/2021.6.0/include \
-		 -I/home/xialei/intel/oneapi/dpl/2021.7.0/linux/include \
-		 -I/home/xialei/intel/oneapi/dpcpp-ct/2022.1.0/include \
-		 -I/home/xialei/intel/oneapi/dnnl/2022.1.0/cpu_dpcpp_gpu_dpcpp/include \
-		 -I/home/xialei/intel/oneapi/dev-utilities/2021.6.0/include \
-		 -I/home/xialei/intel/oneapi/dal/2021.6.0/include \
-		 -I/home/xialei/intel/oneapi/ccl/2021.6.0/include/cpu_gpu_dpcpp \
 		 -I/usr/lib/gcc/x86_64-linux-gnu/9/include \
 		 -I/usr/local/include \
 		 -I/usr/include/x86_64-linux-gnu \

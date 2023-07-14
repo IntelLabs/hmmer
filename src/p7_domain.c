@@ -149,7 +149,7 @@ extern int p7_domain_Serialize(const P7_DOMAIN *obj, uint8_t **buf, uint32_t *n,
     ESL_REALLOC(*buf, (*n + ser_size));
     *nalloc = *n + ser_size;
   }
-  {
+  
   ptr = *buf + *n; // pointer to start of region we'll serialize to
   
   // Field 1: serialized size
@@ -260,7 +260,7 @@ extern int p7_domain_Serialize(const P7_DOMAIN *obj, uint8_t **buf, uint32_t *n,
 
   return ser_return; // if we get this far and the Serialize went well, return eslOK.  Otherwise, return the error code from 
   // the serialize 
-  }
+  
 ERROR:
   return eslEMEM;
 }
@@ -443,7 +443,7 @@ extern int p7_domain_TestSample(ESL_RAND64 *rng, P7_DOMAIN **ret_obj){
   if(*ret_obj == NULL){
     ESL_ALLOC(*ret_obj, sizeof(P7_DOMAIN));
   }
-  {
+  
   P7_DOMAIN *the_domain = *ret_obj; // convenience pointer 
  
 
@@ -481,7 +481,7 @@ extern int p7_domain_TestSample(ESL_RAND64 *rng, P7_DOMAIN **ret_obj){
   }
 
   return eslOK; // If we make it here, everything went well
-  }
+  
 ERROR:
   return eslEMEM;
 }

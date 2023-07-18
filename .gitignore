@@ -2,7 +2,6 @@ configure
 config.log
 config.status
 Makefile
-easel
 *.o
 *.dSYM
 *.stamp

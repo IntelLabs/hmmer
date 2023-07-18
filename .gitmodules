@@ -1,0 +1,3 @@
+[submodule "easel"]
+	path = easel
+	url = https://github.com/EddyRivasLab/easel

@@ -116,7 +116,6 @@ p7_Forward(const ESL_DSQ *dsq, int L, const P7_OPROFILE *om, P7_OMX *ox, float *
     exit(0);
   }
 
-  exit(0);
   return forward_engine(TRUE, dsq, L, om, ox, opt_sc);
 }
 

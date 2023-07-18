@@ -1,3 +1,27 @@
+
+## compilation of HMMER optimized on Intel Xeon CPU
+
+This is an optimized version of original HMMER, which adopts AVX2/AVX512 intrinsics to accelerate on Intel Xeon CPU.
+Please follow the guides to finish the compilation:
+
+### install oneAPI HPC Toolkit
+
+[Guidelines of Intel oneAPI HPC Toolkit](https://www.intel.com/content/www/us/en/developer/tools/oneapi/hpc-toolkit-download.html)
+
+### configure and compile
+
+```
+   % source <intel-oneapi>/tbb/latest/env/vars.sh
+   % git submodule update --init --recursive
+   % cp easel_makefile.in easel/Makefile.in
+   % cd easel && autoconf && ./configure --prefix=$PWD && cd ..
+   % CC=icc CFLAGS="-O3 -march=icelake-server -fPIC" ./configure --prefix=$PWD/release
+   % make && make install
+   % ./release/bin/jackhmmer -h
+```
+
+# The README information of original repo is kept in the following lines:
+
 ## HMMER - biological sequence analysis using profile HMMs
 
 [![](https://travis-ci.org/EddyRivasLab/hmmer.svg?branch=develop)](https://travis-ci.org/EddyRivasLab/hmmer)

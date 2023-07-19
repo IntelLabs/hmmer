@@ -8,16 +8,18 @@ Please follow the guides to finish the compilation:
 
 [Guidelines of Intel oneAPI HPC Toolkit](https://www.intel.com/content/www/us/en/developer/tools/oneapi/hpc-toolkit-download.html)
 
-### configure and compile
+### Configure and compile
 
-```
-   % source <intel-oneapi>/tbb/latest/env/vars.sh
-   % git submodule update --init --recursive
-   % cp easel_makefile.in easel/Makefile.in
-   % cd easel && autoconf && ./configure --prefix=$PWD && cd ..
-   % CC=icc CFLAGS="-O3 -march=icelake-server -fPIC" ./configure --prefix=$PWD/release
-   % make && make install
-   % ./release/bin/jackhmmer -h
+```bash
+source <intel-oneapi>/tbb/latest/env/vars.sh
+cd hmmer
+git submodule update --init --recursive
+cp easel_makefile.in easel/Makefile.in
+cd easel && autoconf && ./configure --prefix=$PWD && cd ..
+autoconf
+CC=icc CFLAGS="-O3 -march=icelake-server -fPIC" ./configure --prefix=$PWD/release
+make && make install
+./release/bin/jackhmmer -h
 ```
 
 # The README information of original repo is kept in the following lines:

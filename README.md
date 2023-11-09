@@ -1,4 +1,4 @@
-This is an optimized version of original HMMER, which adopts AVX2/AVX512 intrinsics to accelerate on latest CPUs.
+This is an accelerated version of original HMMER, which adopts AVX2/AVX512 intrinsics to accelerate on latest CPUs.
 
 ## Compilation of HMMER optimized on Intel Xeon CPU
 

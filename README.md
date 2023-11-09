@@ -1,4 +1,4 @@
-##  HMMER accelerated using latest CPUs
+#  HMMER accelerated using latest CPUs
 HMMER performs biological sequence analysis using profile HMMs. This is an accelerated version of original HMMER, which adopts AVX2/AVX512 intrinsics to accelerate on latest x86 CPUs.
 
 ## Compilation

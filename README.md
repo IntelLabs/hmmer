@@ -1,7 +1,7 @@
+This is an optimized version of original HMMER, which adopts AVX2/AVX512 intrinsics to accelerate on latest CPUs.
 
-## compilation of HMMER optimized on Intel Xeon CPU
+## Compilation of HMMER optimized on Intel Xeon CPU
 
-This is an optimized version of original HMMER, which adopts AVX2/AVX512 intrinsics to accelerate on Intel Xeon CPU.
 Please follow the guides to finish the compilation:
 
 ### install oneAPI HPC Toolkit

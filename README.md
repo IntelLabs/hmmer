@@ -18,7 +18,7 @@ git submodule update --init --recursive
 cp easel_makefile.in easel/Makefile.in
 cd easel && autoconf && ./configure --prefix=$PWD && cd ..
 autoconf
-CC=icc CFLAGS="-O3 -march=icelake-server -fPIC" ./configure --prefix=$PWD/release
+CC=icpx CFLAGS="-O3 -march=icelake-server -fPIC" ./configure --prefix=$PWD/release
 make && make install
 ./release/bin/jackhmmer -h
 ```
